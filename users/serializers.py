@@ -6,7 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
     qty_modules = serializers.SerializerMethodField()
 
     def get_qty_modules(self, instance):
-        """qty of user's modules"""
+        """Kол-во пользовательских модулей."""
         return instance.module.count()
 
     class Meta:

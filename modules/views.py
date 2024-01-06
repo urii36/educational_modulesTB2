@@ -7,7 +7,7 @@ from modules.serializers import ModuleSerializer
 
 
 class ModulesCreateAPIView(generics.CreateAPIView):
-    """View to create a module"""
+    """View для создания модуля."""
     serializer_class = ModuleSerializer
     permission_classes = [IsAuthenticated]
 
@@ -18,21 +18,21 @@ class ModulesCreateAPIView(generics.CreateAPIView):
 
 
 class ModulesListAPIView(generics.ListAPIView):
-    """View to get a list of modules"""
+    """View для получения списка модулей."""
     serializer_class = ModuleSerializer
     queryset = Module.objects.all()
     pagination_class = ModulesPaginator
 
 
 class ModulesRetrieveAPIView(generics.RetrieveAPIView):
-    """View to get a singe module by id"""
+    """View для получения отдельного модуля по идентификатору."""
     serializer_class = ModuleSerializer
     queryset = Module.objects.all()
     permission_classes = [IsAuthenticated]
 
 
 class ModulesUpdateAPIView(generics.UpdateAPIView):
-    """View to edit a module by id"""
+    """View для редактирования модуля по идентификатору."""
     serializer_class = ModuleSerializer
     permission_classes = [IsAuthenticated]
 
@@ -41,7 +41,7 @@ class ModulesUpdateAPIView(generics.UpdateAPIView):
 
 
 class ModulesDestroyAPIView(generics.DestroyAPIView):
-    """View to delete a module by id"""
+    """View для удаления модуля по идентификатору."""
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):

@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAdminUser, AllowAny
 
 
 class UserViewSet(ModelViewSet):
-    """Viewset for User model. To create need to enter 'email' and 'password' """
+    """Просмотр задан для модели пользователя. Для создания необходимо ввести "email" и "пароль". """
     serializer_class = UserSerializer
     queryset = User.objects.all()
 

@@ -57,8 +57,8 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'corsheaders',
 
-    'users.apps.UsersConfig',
-    'modules.apps.ModulesConfig',
+    'users',
+    'modules',
 ]
 
 MIDDLEWARE = [
@@ -97,10 +97,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': get_env_values('db_name'),
-        'USER': 'postgres',
-        'PASSWORD': get_env_values('db_password'),
-        'HOST': get_env_values('db_host')
+        'NAME': get_env_values('POSTGRES_DB'),
+        'USER': get_env_values('POSTGRES_USER'),
+        'PASSWORD': get_env_values('POSTGRES_PASSWORD'),
+        'HOST': get_env_values('DB_HOST'),
+        'PORT': '5432',
     }
 }
 
@@ -169,18 +170,15 @@ EMAIL_HOST_USER = get_env_values('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = get_env_values('EMAIL_HOST_PASSWORD')
 EMAIL_USE_SSL = True
 
-CELERY_BROKER_URL = 'redis://redis:6379/0'
-CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': get_env_values('CACHES_LOCATION'), }}
 
-# CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
-# CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+# Celery broker settings
+CELERY_BROKER_URL = get_env_values('CELERY_BROKER_HOST')
+CELERY_RESULT_BACKEND = get_env_values('CELERY_BROKER_HOST')
 
-CELERY_BEAT_SCHEDULE = {
-    'birthday_mail': {
-        'task': 'users.tasks.check_birthday',
-        'schedule': timedelta(days=1)
-    },
-}
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:8000',  # Замените на адрес вашего фронтенд-сервера
