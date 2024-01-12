@@ -8,7 +8,7 @@ from users.models import NULLABLE
 # Create your models here.
 class Module(models.Model):
     """Хранит один модуль."""
-    number = models.IntegerField(verbose_name='Порядковый номер')
+    number = models.PositiveIntegerField(verbose_name='Порядковый номер')
     name = models.CharField(max_length=100, verbose_name='Название')
     description = models.TextField(verbose_name='Описание', **NULLABLE)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE, related_name='module')

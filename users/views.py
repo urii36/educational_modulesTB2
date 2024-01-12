@@ -1,8 +1,11 @@
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ViewSet
+from rest_framework import status
+from rest_framework.authtoken.models import Token
 from users.models import User
-from users.serializers import UserSerializer, UserCreateSerializer
+from users.serializers import UserSerializer, UserCreateSerializer, UserLoginSerializer
 from rest_framework.response import Response
 from rest_framework.permissions import IsAdminUser, AllowAny
+from django.contrib.auth import login
 
 
 class UserViewSet(ModelViewSet):
@@ -24,3 +27,32 @@ class UserViewSet(ModelViewSet):
         else:
             permission_classes = [AllowAny]
         return [permission() for permission in permission_classes]
+
+
+class UserLoginViewSet(ViewSet):
+    """
+        Представление (ViewSet) для аутентификации пользователя и создания токена.
+
+        Attributes:
+            serializer_class (UserLoginSerializer): Класс сериализатора для аутентификации.
+
+        Methods:
+            create(request, *args, **kwargs): Метод для обработки запроса на аутентификацию пользователя,
+                создания токена и возврата данных пользователя вместе с токеном.
+
+        Returns:
+            Response: Ответ, содержащий токен и данные пользователя.
+    """
+    serializer_class = UserLoginSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+
+        user = serializer.validated_data['user']
+        login(request, user)
+
+        token, created = Token.objects.get_or_create(user=user)
+
+        user_serializer = UserSerializer(user)
+        return Response({'token': token.key, 'user': user_serializer.data}, status=status.HTTP_200_OK)

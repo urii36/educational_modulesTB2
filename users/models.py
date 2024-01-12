@@ -38,7 +38,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    """Хранит данные одного пользователя."""
+    """Хранит данные одного пользователя.lery"""
     objects = UserManager()
 
     username = None

@@ -53,6 +53,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework.authtoken',
     'drf_yasg',
     'django_celery_beat',
     'corsheaders',
@@ -144,18 +145,18 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-UTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'users.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny'
-    ]
-
+    'DEFAULT_PERMISSION_CLASSES': (
+        # 'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.AllowAny',
+    ),
 }
 
 # Настройки срока действия токенов
@@ -178,6 +179,14 @@ CACHES = {
 # Celery broker settings
 CELERY_BROKER_URL = get_env_values('CELERY_BROKER_HOST')
 CELERY_RESULT_BACKEND = get_env_values('CELERY_BROKER_HOST')
+
+
+CELERY_BEAT_SCHEDULE = {
+    'birthday_mail': {
+        'task': 'users.tasks.check_birthday',
+        'schedule': timedelta(days=1)
+    },
+}
 
 
 CORS_ALLOWED_ORIGINS = [
